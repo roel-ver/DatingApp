@@ -21,10 +21,14 @@ export class MembersService {
   userParams: UserParams;
 
   constructor(private http: HttpClient, private accountService: AccountService) {
+    this.setUser();
+  }
+
+  setUser(){
     this.accountService.currentUser$.pipe(take(1)).subscribe(user => {
       this.user = user;
       this.userParams = new UserParams(user);
-    })
+    })    
   }
 
   getUserParams() {
@@ -36,7 +40,9 @@ export class MembersService {
   }
 
   resetUserParams(){
+    console.log(this.user);
     this.userParams = new UserParams(this.user);
+    console.log(this.userParams);
     return this.userParams;
   }
 
@@ -70,6 +76,19 @@ export class MembersService {
       return of(member);
 
     return this.http.get<Member>(this.baseUrl + 'users/' + username);
+  
+  }
+
+  addLike(username: string){
+    return this.http.post(this.baseUrl + 'likes/' + username, {});
+  }
+
+  getLikes(predicate: string, pageNumber, pageSize){
+
+    let params = this.getPaginationHeaders(pageNumber, pageSize);
+    params = params.append('predicate', predicate);
+
+    return this.getPaginatedResult<Partial<Member[]>>(this.baseUrl + 'likes', params);
   
   }
 

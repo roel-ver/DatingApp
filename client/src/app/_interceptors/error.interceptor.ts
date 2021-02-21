@@ -29,14 +29,15 @@ export class ErrorInterceptor implements HttpInterceptor {
                   }
                 }
                 throw modelStateErrors.flat();
-              } else {
+              } 
+              else {
                 this.toastr.error(error.error, error.status);
                 //this.toastr.error('Bad Request', error.status);
               }
               break;
             case 401:
               //this.toastr.error(error.error.message, error.status);
-              this.toastr.error(error.error.message, error.status);
+              this.toastr.error(error.error, error.status);
               break;
             case 404:
               this.router.navigateByUrl('/not-found');
